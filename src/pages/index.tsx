@@ -16,7 +16,6 @@ export function Index() {
   const [submitted, setSubmitted] = useState(false);
   
   const { data: users, isLoading, error } = useSearchUsers(tempQuery);
-  console.log("🚀 ~ users:", users)
   
   useEffect(() => {
     if (users) {
