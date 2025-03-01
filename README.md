@@ -25,6 +25,13 @@ This is a github search app built with React, Shadcn UI and Tailwind CSS.
 
 ## Run Locally
 
+ENV Example:
+
+```bash
+  VITE_BASE_URL=https://api.github.com
+  VITE_SITE_TITLE='Github Search'
+```
+
 Minimal setup requirements
 
 **NodeJS:** v18.16.0
