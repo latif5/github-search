@@ -23,5 +23,4 @@ export const getUserRepositories = jest.fn().mockImplementation(async (_username
 });
 
 export const setupInterceptors = jest.fn().mockImplementation(() => {
-  // Empty implementation
 });

@@ -4,18 +4,31 @@ declare global {
   interface Window {
     import: {
       meta: {
-        env: typeof mockedEnv;
+        env: Record<string, string>;
       };
     };
   }
 }
 
-const mockedEnv = {
-  VITE_BASE_URL: 'https://api.github.com'
-};
-
-window.import = {
+(globalThis as any).import = {
   meta: {
-    env: mockedEnv
+    env: { VITE_BASE_URL: 'https://api.github.com' }
   }
 };
+
+export {};
+
+declare global {
+  interface Window {
+    expect: jest.Expect;
+  }
+}
+
+declare module 'expect' {
+  interface AsymmetricMatchers {
+    toBeInTheDocument(): void;
+  }
+  interface Matchers<R> {
+    toBeInTheDocument(): R;
+  }
+}

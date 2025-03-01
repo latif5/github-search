@@ -1,4 +1,3 @@
-/** @jsx React.createElement */
 import { getUserRepositories, searchUsers } from '@/services/githubService.service';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

@@ -22,7 +22,7 @@ const UserList: React.FC<UserListProps> = ({ users, onUserSelect, selectedUser }
           className="w-full"
         >
           {users.map(user => (
-            <Accordion id={user.login} title={user.login} href={`${user.html_url}`} avatar_url={user.avatar_url} onClick={() => onUserSelect(user.login)}>
+            <Accordion key={user.login} id={user.login} title={user.login} href={`${user.html_url}`} avatar_url={user.avatar_url} onClick={() => onUserSelect(user.login)}>
               {selectedUser && <RepositoryList 
                 username={selectedUser}
               />
