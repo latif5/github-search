@@ -1,6 +1,8 @@
 import apiConfig from "../api/apiConfig";
 import { GitHubRepository, GitHubUser } from "../types/index.type";
 
+const baseURL = process.env.VITE_BASE_URL;
+
 interface GitHubSearchResponse {
   total_count: number;
   incomplete_results: boolean;
@@ -11,7 +13,7 @@ export const searchUsers = async (query: string): Promise<GitHubUser[]> => {
   if (!query.trim()) return [];
   
   try {
-    const response = await apiConfig.get<GitHubSearchResponse>('/search/users', {
+    const response = await apiConfig.get<GitHubSearchResponse>(`${baseURL}/search/users`, {
       params: {
         q: query,
         per_page: 5
@@ -29,7 +31,7 @@ export const getUserRepositories = async (username: string): Promise<GitHubRepos
   if (!username.trim()) return [];
   
   try {
-    const response = await apiConfig.get<GitHubRepository[]>(`/users/${username}/repos`, {
+    const response = await apiConfig.get<GitHubRepository[]>(`${baseURL}/users/${username}/repos`, {
       params: {
         sort: 'updated'
       }
