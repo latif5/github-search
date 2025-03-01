@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUserRepositories } from '../hooks/useGithubQueries';
+import { useUserRepositories } from '../hooks/useGithubQueries.hook';
 
 interface RepositoryListProps {
   username: string | null;
@@ -30,10 +30,10 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ username }) => {
   
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Repositories for {username}</h2>
+      <h2 className="text-sm text-gray-700 font-semibold mb-2">Found {repositories.length} repositories.</h2>
       <div className="grid grid-cols-1 gap-4">
         {repositories.map(repo => (
-          <div key={repo.id} className="border rounded p-4 hover:shadow-md">
+          <div key={repo.id} className="border rounded-lg p-4 hover:shadow-md">
             <div className="flex justify-between">
               <h3 className="font-bold text-lg">
                 <a 
@@ -49,9 +49,6 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ username }) => {
                 <span title="Stars" className="flex items-center">
                   ⭐ {repo.stargazers_count}
                 </span>
-                <span title="Forks" className="flex items-center">
-                  🍴 {repo.forks_count}
-                </span>
               </div>
             </div>
             
@@ -61,7 +58,7 @@ const RepositoryList: React.FC<RepositoryListProps> = ({ username }) => {
             
             <div className="mt-4 flex justify-between text-sm">
               {repo.language && (
-                <span className="bg-gray-100 px-2 py-1 rounded">
+                <span className="bg-gray-100 px-2 py-1 rounded-lg">
                   {repo.language}
                 </span>
               )}

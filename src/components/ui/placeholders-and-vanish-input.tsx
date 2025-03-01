@@ -3,14 +3,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { z } from "zod"; // Import zod
+import { z } from "zod";
 
-// Define validation schema
 const searchSchema = z.object({
   query: z.string().min(3, "Search must be at least 3 characters")
 });
-
-// type SearchSchema = z.infer<typeof searchSchema>;
 
 export function PlaceholdersAndVanishInput({
   placeholders,
@@ -21,19 +18,16 @@ export function PlaceholdersAndVanishInput({
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit?: (e: React.FormEvent<HTMLFormElement>, value: string) => void;
 }) {
-  // State management
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Refs
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const newDataRef = useRef<Array<{x: number, y: number, r: number, color: string}>>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Placeholder animation logic
   const startPlaceholderAnimation = useCallback(() => {
     intervalRef.current = setInterval(() => {
       setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
@@ -49,7 +43,6 @@ export function PlaceholdersAndVanishInput({
     }
   }, [startPlaceholderAnimation]);
 
-  // Initialize placeholder animation
   useEffect(() => {
     startPlaceholderAnimation();
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -62,7 +55,6 @@ export function PlaceholdersAndVanishInput({
     };
   }, [startPlaceholderAnimation, handleVisibilityChange]);
 
-  // Canvas drawing logic for vanishing animation
   const drawToCanvas = useCallback(() => {
     if (!inputRef.current) return;
     const canvas = canvasRef.current;
@@ -70,24 +62,20 @@ export function PlaceholdersAndVanishInput({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set up canvas
     canvas.width = 800;
     canvas.height = 800;
     ctx.clearRect(0, 0, 800, 800);
     
-    // Get input styles for text rendering
     const computedStyles = getComputedStyle(inputRef.current);
     const fontSize = parseFloat(computedStyles.getPropertyValue("font-size"));
     ctx.font = `${fontSize * 2}px ${computedStyles.fontFamily}`;
     ctx.fillStyle = "#FFF";
     ctx.fillText(value, 16, 40);
 
-    // Extract pixel data for animation
     const imageData = ctx.getImageData(0, 0, 800, 800);
     const pixelData = imageData.data;
     const newData: Array<{x: number, y: number, color: number[]}> = [];
 
-    // Find all visible pixels
     for (let y = 0; y < 800; y++) {
       const rowOffset = 4 * y * 800;
       for (let x = 0; x < 800; x++) {
@@ -111,7 +99,6 @@ export function PlaceholdersAndVanishInput({
       }
     }
 
-    // Convert to drawing points
     newDataRef.current = newData.map(({ x, y, color }) => ({
       x,
       y,
@@ -120,12 +107,10 @@ export function PlaceholdersAndVanishInput({
     }));
   }, [value]);
 
-  // Update canvas when value changes
   useEffect(() => {
     drawToCanvas();
   }, [value, drawToCanvas]);
 
-  // Vanishing animation
   const animate = (startPosition: number) => {
     const animateFrame = (pos: number = 0) => {
       requestAnimationFrame(() => {
@@ -181,7 +166,6 @@ export function PlaceholdersAndVanishInput({
     animateFrame(startPosition);
   };
 
-  // Input handlers
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !animating) {
       handleValidationAndSubmit();
@@ -199,7 +183,6 @@ export function PlaceholdersAndVanishInput({
     }
   };
 
-  // Validation and submission
   const handleValidationAndSubmit = () => {
     try {
       // Validate input
@@ -237,7 +220,6 @@ export function PlaceholdersAndVanishInput({
     handleValidationAndSubmit();
     
     if (!error && onSubmit && inputRef.current) {
-      // Create a synthetic form event
       const syntheticEvent = { preventDefault: () => {} } as React.FormEvent<HTMLFormElement>;
       onSubmit(syntheticEvent, value);
     }
@@ -253,7 +235,6 @@ export function PlaceholdersAndVanishInput({
         )}
         onSubmit={handleSubmit}
       >
-        {/* Canvas for vanishing animation */}
         <canvas
           className={cn(
             "absolute pointer-events-none text-base transform scale-50 top-[20%] left-2 sm:left-8 origin-top-left filter invert dark:invert-0 pr-20",
@@ -261,8 +242,6 @@ export function PlaceholdersAndVanishInput({
           )}
           ref={canvasRef}
         />
-        
-        {/* Search input */}
         <input
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
@@ -276,8 +255,6 @@ export function PlaceholdersAndVanishInput({
             error ? "focus:ring-red-500" : "focus:ring-black dark:focus:ring-zinc-500"
           )}
         />
-
-        {/* Submit button */}
         <button
           disabled={!value || !!error}
           type="button"
@@ -315,8 +292,6 @@ export function PlaceholdersAndVanishInput({
             />
           </motion.svg>
         </button>
-
-        {/* Placeholder animation */}
         <div className="absolute inset-0 flex items-center rounded-full pointer-events-none">
           <AnimatePresence mode="wait">
             {!value && (
@@ -345,7 +320,6 @@ export function PlaceholdersAndVanishInput({
             )}
           </AnimatePresence>
         </div>
-      {/* Error message */}
       {error && (
         <motion.p
           initial={{ opacity: 0, y: -5 }}

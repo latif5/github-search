@@ -3,7 +3,7 @@ import axios, { AxiosInstance } from 'axios';
 
 const apiConfig: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL!,
-  timeout: 1500,
+  timeout: 15000,
   headers: {
     'Accept': 'application/vnd.github.v3+json'
   }

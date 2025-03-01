@@ -1,49 +1,95 @@
-import React, { useState } from 'react';
-import { GitHubUser } from '../types';
-import UserSearch from '../components/UserSearch';
-import UserList from '../components/UserList';
-import RepositoryList from '../components/RepositoryList';
+"use client";
 
-const Index: React.FC = () => {
-  const [users, setUsers] = useState<GitHubUser[]>([]);
+import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
+import { useSearchUsers } from "@/hooks/useGithubQueries.hook";
+import { GitHubUser } from "@/types/index.type";
+import { useEffect, useState } from "react";
+import UserList from "../components/UserList";
+import { motion } from "framer-motion";
+import SkeletonAccordion from "../components/ui/skeleton-accordion";
+
+export function Index() {
+  const [query, setQuery] = useState('');
+  const [tempQuery, setTempQuery] = useState('');
+  const [dataUsers, setDataUsers] = useState<GitHubUser[]>([]);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  
+  const { data: users, isLoading, error } = useSearchUsers(tempQuery);
+  
+  useEffect(() => {
+    if (users) {
+      setDataUsers(users);
+    }
+    if (users?.length === 0) {
+      setSelectedUser(null);
+    }
+  }, [users]);
+  
+  const placeholders = [
+    "Search github users?",
+    "Just type username github account.",
+    "Search github repositories?",
+  ];
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    setSubmitted(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setTempQuery(query);
+    setSubmitted(true);
+  };
 
   const handleUserSelect = (username: string) => {
     setSelectedUser(username);
   };
-  
-  const handleUsersFound = (foundUsers: GitHubUser[]) => {
-    setUsers(foundUsers);
-    if (foundUsers.length === 0) {
-      setSelectedUser(null);
-    }
-  };
-  
-  return (
-    
-      <div className="container mx-auto p-4 max-w-4xl">
-        <h1 className="text-2xl font-bold mb-6">GitHub User & Repository Explorer</h1>
-        
-        <UserSearch onUsersFound={handleUsersFound} />
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-1">
-            <UserList 
-              users={users}
-              onUserSelect={handleUserSelect}
-              selectedUser={selectedUser}
-            />
-          </div>
-          
-          <div className="md:col-span-2">
-            <RepositoryList 
-              username={selectedUser}
-            />
-          </div>
-        </div>
-      </div>
-      
-  );
-};
 
-export default Index;
+  return (
+    <>
+      <div className="h-screen flex flex-col items-center px-4 max-h-[100vh] overflow-y-scroll bg-neutral-100">
+          <motion.div
+            initial={{ y: '30vh', opacity: 0 }}
+            animate={{ y: dataUsers.length > 0 ? '10vh' : '30vh', opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl dark:text-white text-black">
+              Github User & Repository Explorer
+            </h2>
+            <PlaceholdersAndVanishInput
+              placeholders={placeholders}
+              onChange={handleChange}
+              onSubmit={handleSubmit}
+            />
+            
+            {isLoading && 
+              <div className="mt-12 lg:mt-16">
+                <SkeletonAccordion />
+              </div>
+            }
+            {error && <p className="text-red-500">Error: {(error as Error).message}</p>}
+          </motion.div>
+        {submitted && !isLoading && (
+          <div className="w-[80%] lg:w-[40%] mt-30 lg:mt-[20vh]">
+            <div className="md:col-span-1">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <UserList 
+                  users={dataUsers}
+                  onUserSelect={handleUserSelect}
+                  selectedUser={selectedUser}
+                />
+              </motion.div>
+            </div>
+            
+          </div>
+        )}
+      </div>
+    </>
+  );
+}

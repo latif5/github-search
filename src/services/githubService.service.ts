@@ -1,5 +1,5 @@
 import apiConfig from "../api/apiConfig";
-import { GitHubRepository, GitHubUser } from "../types";
+import { GitHubRepository, GitHubUser } from "../types/index.type";
 
 interface GitHubSearchResponse {
   total_count: number;
@@ -25,7 +25,6 @@ export const searchUsers = async (query: string): Promise<GitHubUser[]> => {
   }
 };
 
-// Function to get user repositories
 export const getUserRepositories = async (username: string): Promise<GitHubRepository[]> => {
   if (!username.trim()) return [];
   

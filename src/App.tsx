@@ -1,10 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './App.css'
-import Index from './pages/index.tsx'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useEffect } from 'react'
-import { setupInterceptors } from './services/githubService'
-import { PlaceholdersAndVanishInputDemo } from './components/demo.tsx'
+import { setupInterceptors } from './services/githubService.service'
+import { Index } from './pages/index'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,8 +22,7 @@ function App() {
   return (
     <>
     <QueryClientProvider client={queryClient}>
-      {/* <Index /> */}
-      <PlaceholdersAndVanishInputDemo />
+      <Index />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
     </>

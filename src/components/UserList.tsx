@@ -1,5 +1,7 @@
 import React from 'react';
-import { GitHubUser } from '../types';
+import { GitHubUser } from '../types/index.type';
+import { Accordion, Accordions } from './ui/accordion';
+import RepositoryList from './RepositoryList';
 
 interface UserListProps {
   users: GitHubUser[];
@@ -15,7 +17,7 @@ const UserList: React.FC<UserListProps> = ({ users, onUserSelect, selectedUser }
   return (
     <div className="mb-6">
       <h2 className="text-lg font-semibold mb-2">Users Found</h2>
-      <div className="grid grid-cols-1 gap-2">
+      <div className="grid-cols-1 gap-2 hidden">
         {users.map(user => (
           <div 
             key={user.id}
@@ -26,7 +28,7 @@ const UserList: React.FC<UserListProps> = ({ users, onUserSelect, selectedUser }
             <img 
               src={user.avatar_url} 
               alt={`${user.login}'s avatar`} 
-              className="w-10 h-10 rounded-full mr-3"
+              className="w-8 h-8 rounded-full mr-3"
             />
             <div>
               <h3 className="font-medium">{user.login}</h3>
@@ -43,6 +45,21 @@ const UserList: React.FC<UserListProps> = ({ users, onUserSelect, selectedUser }
           </div>
         ))}
       </div>
+
+      <Accordions 
+        type="single"
+        collapsible
+        className="w-full"
+      >
+        {users.map(user => (
+          <Accordion id={user.login} title={user.login} href={`${user.html_url}`} avatar_url={user.avatar_url} onClick={() => onUserSelect(user.login)}>
+            {selectedUser && <RepositoryList 
+              username={selectedUser}
+            />
+            }
+          </Accordion>
+        ))}
+      </Accordions>
     </div>
   );
 };
