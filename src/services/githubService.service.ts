@@ -11,7 +11,7 @@ export const searchUsers = async (query: string): Promise<GitHubUser[]> => {
   if (!query.trim()) return [];
   
   try {
-    const response = await apiConfig.get<GitHubSearchResponse>('/search/users', {
+    const response = await apiConfig.get<GitHubSearchResponse>(`/search/users`, {
       params: {
         q: query,
         per_page: 5

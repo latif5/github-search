@@ -62,6 +62,11 @@ Start the server
   npm run dev
 ```
 
+**Test**
+
+```bash
+  npm run test
+```
 
 ## License
 
