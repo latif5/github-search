@@ -49,7 +49,7 @@ export function Index() {
 
   return (
     <>
-      <div className="h-screen flex flex-col items-center px-4 max-h-[100vh] overflow-y-scroll bg-neutral-100">
+      <div className="h-screen w-screen flex flex-col items-center max-w-[100vw] max-h-[100vh] overflow-y-scroll overflow-x-hidden bg-neutral-100">
           <motion.div
             initial={{ y: '30vh', opacity: 0 }}
             animate={{ y: dataUsers.length > 0 ? '10vh' : '30vh', opacity: 1 }}
