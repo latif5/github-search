@@ -9,8 +9,8 @@ This is a github search app built with React, Shadcn UI and Tailwind CSS.
 
 **UI:**
 - [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)
-- [Search Bar](https://ui.shadcn.com/components/search-bar) (With tweak components to match the design)
-- [Accordion](https://ui.shadcn.com/components/accordion) (With tweak components to match the design) 
+- [Search Bar](https://21st.dev/aceternity/placeholders-and-vanish-input/default) (With tweak components to match the design)
+- [Accordion](https://21st.dev/fuma-nama/accordion/default) (With tweak components to match the design) 
 
 **Animation:** [Framer Motion](https://framermotion.framer.website/)
 
